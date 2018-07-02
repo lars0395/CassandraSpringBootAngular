@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+    <title>Start</title>
+    <script type="text/javascript">
+        var app = angular.module("CassandraManagement", []);
+
+        //Controller Part
+        app.controller("CassandraController", function($scope, $http) {
+
+
+            $scope.customers = [];
+            $scope.cassandraForm = {
+                id : "",
+            };
+
+            $scope.fetchData = function() {
+
+                var method = "";
+                var url = "";
+
+                $http({
+                    method : "GET",
+                    url : /getData/ + $scope.cassandraForm.id,
+                    data : angular.toJson($scope.customerForm),
+                }).then( _success, _error );
+            };
+
+
+            function _success(response) {
+                console.log(angular.fromJson(response));
+                _clearFormData()
+            }
+
+            function _error(response) {
+                console.log(response);
+            }
+
+            //Clear the form
+            function _clearFormData() {
+                $scope.customerForm.id = "";
+
+            };
+        });
+    </script>
+</head>
+<body ng-app="CassandraManagement" ng-controller="CassandraController">
+    <h1>CorrelationID</h1>
+    <form ng-submit="fetchData()">
+        <input type="text" ng-model="cassandraForm.id" />
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+</html>
