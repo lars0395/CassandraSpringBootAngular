@@ -1,0 +1,25 @@
+<div>
+    <h1>CorrelationID</h1>
+    <form ng-submit="fetchData()">
+        <input type="text" ng-model="cassandraForm.correlationId"  title="correlationId" style="width: 300px;"/>
+        <select name="ip" size="2" ng-model="cassandraForm.ip">
+            <option value="127.0.0.1">127.0.0.1</option>
+            <option value="127.0.0.1">10.10.10.10</option>
+        </select>
+        <input type="submit" value="Submit" />
+    </form>
+    <table >
+        <tr>
+            <th>key</th>
+            <th>timestamp</th>
+            <th>metadata</th>
+            <th>payload</th>
+        </tr>
+        <tr ng-repeat="entry in entries">
+            <td>{{ entry.key }}</td>
+            <td>{{ entry.timestamp | date:'dd-MM-yyyy HH:mm:ss,sss'}}</td>
+            <td><textarea style="border:none; width:300px; height:150px;" title="metaData">{{ entry.metadata }}</textarea></td>
+            <td><textarea style="border:none; width:1000px; height:500px" title="payload">{{ entry.payload }}</textarea></td>
+        </tr>
+    </table>
+</div>

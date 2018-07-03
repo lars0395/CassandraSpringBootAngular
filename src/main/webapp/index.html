@@ -1,11 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="Tools">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
-    <title>Start</title>
-    <script type="text/javascript">
-        var app = angular.module("CassandraManagement", []);
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    <script>
+        // create the module and name it scotchApp
+        // also include ngRoute for all our routing needs
+        var app = angular.module('Tools', ['ngRoute']);
+
+        // configure our routes
+        app.config(function($routeProvider) {
+            $routeProvider
+                .when('/', {
+                    templateUrl : 'pages/home.html'
+                })
+                // route for the contact page
+                .when('/cassandra', {
+                    templateUrl : 'fetchCassandra.html',
+                    controller : 'CassandraController'
+                });
+        });
 
         //Controller Part
         app.controller("CassandraController", function($scope, $http) {
@@ -18,7 +36,7 @@
             };
 
             $scope.fetchData = function() {
-                var url = "/getData"
+                var url = "/getData";
 
                 if($scope.cassandraForm.ip === "") {
                     url = url + "/" + $scope.cassandraForm.correlationId;
@@ -58,30 +76,24 @@
             border: 1px solid black;
         }
     </style>
+    <title>Start</title>
 </head>
-<body ng-app="CassandraManagement" ng-controller="CassandraController">
-    <h1>CorrelationID</h1>
-    <form ng-submit="fetchData()">
-        <input type="text" ng-model="cassandraForm.correlationId"  title="correlationId" style="width: 300px;"/>
-        <select name="ip" size="2" ng-model="cassandraForm.ip">
-            <option value="127.0.0.1">127.0.0.1</option>
-            <option value="127.0.0.1">10.10.10.10</option>
-        </select>
-        <input type="submit" value="Submit" />
-    </form>
-    <table >
-        <tr>
-            <th>key</th>
-            <th>timestamp</th>
-            <th>metadata</th>
-            <th>payload</th>
-        </tr>
-        <tr ng-repeat="entry in entries">
-            <td>{{ entry.key }}</td>
-            <td>{{ entry.timestamp | date:'dd-MM-yyyy HH:mm:ss,sss'}}</td>
-            <td><textarea style="border:none; width:300px; height:150px;" title="metaData">{{ entry.metadata }}</textarea></td>
-            <td><textarea style="border:none; width:1000px; height:500px" title="payload">{{ entry.payload }}</textarea></td>
-        </tr>
-    </table>
+<body>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Angular Routing Example</a>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                <li><a href="#cassandra"><i class="fa fa-shield"></i> Cassandra</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div ng-view>
+</div>
 </body>
 </html>
