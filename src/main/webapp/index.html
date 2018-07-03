@@ -11,19 +11,15 @@
         app.controller("CassandraController", function($scope, $http) {
 
 
-            $scope.customers = [];
+            $scope.entries = [];
             $scope.cassandraForm = {
-                id : "",
+                correlationId : "",
             };
 
             $scope.fetchData = function() {
-
-                var method = "";
-                var url = "";
-
                 $http({
                     method : "GET",
-                    url : /getData/ + $scope.cassandraForm.id,
+                    url : /getData/ + $scope.cassandraForm.correlationId,
                     data : angular.toJson($scope.customerForm),
                 }).then( _success, _error );
             };
@@ -31,26 +27,49 @@
 
             function _success(response) {
                 console.log(angular.fromJson(response));
-                _clearFormData()
+                $scope.entries = response.data;
             }
 
             function _error(response) {
                 console.log(response);
             }
-
-            //Clear the form
-            function _clearFormData() {
-                $scope.customerForm.id = "";
-
-            };
         });
     </script>
+    <style>
+        table {
+            border: 1px solid black;
+            border-spacing: 0px;
+        }
+
+        th {
+            background-color: #5f98d4;
+            border: 1px solid black;
+        }
+
+        td {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body ng-app="CassandraManagement" ng-controller="CassandraController">
     <h1>CorrelationID</h1>
     <form ng-submit="fetchData()">
-        <input type="text" ng-model="cassandraForm.id" />
+        <input type="text" ng-model="cassandraForm.correlationId"  title="correlationId" style="width: 300px;"/>
         <input type="submit" value="Submit" />
     </form>
+    <table >
+        <tr>
+            <th>key</th>
+            <th>timestamp</th>
+            <th>metadata</th>
+            <th>payload</th>
+        </tr>
+        <tr ng-repeat="entry in entries">
+            <td>{{ entry.key }}</td>
+            <td>{{ entry.timestamp | date:'dd-MM-yyyy HH:mm:ss,sss'}}</td>
+            <td><textarea style="border:none; width:300px; height:150px;" title="metaData">{{ entry.metadata }}</textarea></td>
+            <td><textarea style="border:none; width:1000px; height:500px" title="payload">{{ entry.payload }}</textarea></td>
+        </tr>
+    </table>
 </body>
 </html>

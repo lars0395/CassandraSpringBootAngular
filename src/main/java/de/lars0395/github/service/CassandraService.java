@@ -14,14 +14,14 @@ public class CassandraService {
 
     public ResultSet getCassandraDataForCorrelationId(String correlationID, String ip) {
         Session cassandraSession = openSession(ip);
-        return cassandraSession.execute("Select correlationId, key, timestamp, blobastext(metadata), blobastext(payload) " +
-                "From heidi3.logspi where correlationId=\'?\'",correlationID);
+        return cassandraSession.execute("Select key, timestamp, blobastext(metadata), blobastext(payload) " +
+                "From heidi3.logspi where correlationId=?",correlationID);
     }
 
     private Session openSession(String ip) {
         if (ip == null || ip.isEmpty()) {
             ip = defaultIP;
         }
-        return Cluster.builder().addContactPoint(ip).withPort(9024).build().connect();
+        return Cluster.builder().addContactPoint(ip).build().connect("heidi3");
     }
 }
