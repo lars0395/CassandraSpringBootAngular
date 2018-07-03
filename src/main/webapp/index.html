@@ -14,12 +14,20 @@
             $scope.entries = [];
             $scope.cassandraForm = {
                 correlationId : "",
+                ip: ""
             };
 
             $scope.fetchData = function() {
+                var url = "/getData"
+
+                if($scope.cassandraForm.ip === "") {
+                    url = url + "/" + $scope.cassandraForm.correlationId;
+                } else {
+                    url = url + "?correlationID=" + $scope.cassandraForm.correlationId + "&ip=" +$scope.cassandraForm.ip
+                }
                 $http({
                     method : "GET",
-                    url : /getData/ + $scope.cassandraForm.correlationId,
+                    url : url,
                     data : angular.toJson($scope.customerForm),
                 }).then( _success, _error );
             };
@@ -55,6 +63,10 @@
     <h1>CorrelationID</h1>
     <form ng-submit="fetchData()">
         <input type="text" ng-model="cassandraForm.correlationId"  title="correlationId" style="width: 300px;"/>
+        <select name="ip" size="2" ng-model="cassandraForm.ip">
+            <option value="127.0.0.1">127.0.0.1</option>
+            <option value="127.0.0.1">10.10.10.10</option>
+        </select>
         <input type="submit" value="Submit" />
     </form>
     <table >
