@@ -32,21 +32,30 @@
             $scope.entries = [];
             $scope.cassandraForm = {
                 correlationId : "",
-                ip: ""
+                ip: "",
+                nativeQuery: ""
             };
 
             $scope.fetchData = function() {
                 var url = "/getData";
+                var method = "GET";
+                var data = "";
 
-                if($scope.cassandraForm.ip === "") {
-                    url = url + "/" + $scope.cassandraForm.correlationId;
+                if($scope.cassandraForm.nativeQuery === "") {
+                    if ($scope.cassandraForm.ip === "") {
+                        url = url + "/" + $scope.cassandraForm.correlationId;
+                    } else {
+                        url = url + "?correlationID=" + $scope.cassandraForm.correlationId + "&ip=" + $scope.cassandraForm.ip
+                    }
                 } else {
-                    url = url + "?correlationID=" + $scope.cassandraForm.correlationId + "&ip=" +$scope.cassandraForm.ip
+                    method = "POST";
+                    url = url + "?ip=" + $scope.cassandraForm.ip
+                    data = angular.toJson($scope.cassandraForm.nativeQuery);
                 }
                 $http({
-                    method : "GET",
+                    method : method,
                     url : url,
-                    data : angular.toJson($scope.customerForm),
+                    data : data
                 }).then( _success, _error );
             };
 
@@ -74,6 +83,9 @@
 
         td {
             border: 1px solid black;
+        }
+        textarea {
+            resize: none;
         }
     </style>
     <title>Start</title>

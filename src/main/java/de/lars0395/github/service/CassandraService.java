@@ -18,6 +18,11 @@ public class CassandraService {
                 "From heidi3.logspi where correlationId=?",correlationID);
     }
 
+    public ResultSet executeNativeQuery(String ip, String nativeQuery) {
+        Session cassandraSession = openSession(ip);
+        return cassandraSession.execute(nativeQuery);
+    }
+
     private Session openSession(String ip) {
         if (ip == null || ip.isEmpty()) {
             ip = defaultIP;

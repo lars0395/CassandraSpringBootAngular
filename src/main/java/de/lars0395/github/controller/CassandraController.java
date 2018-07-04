@@ -6,6 +6,7 @@ import de.lars0395.github.model.CassandraEntry;
 import de.lars0395.github.service.CassandraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,14 @@ public class CassandraController {
         ResultSet resultSet = cassandraService.getCassandraDataForCorrelationId(correlationID,ip);
         return createListFromResultSet(resultSet);
     }
+
+    @RequestMapping(value = "/getData", method = RequestMethod.POST)
+    public List<CassandraEntry> executeNativeQuery(@RequestParam("ip") String ip, @RequestBody String nativeQuery) {
+        ResultSet resultSet = cassandraService.executeNativeQuery(ip, nativeQuery.substring(1, nativeQuery.length()-1));
+        return createListFromResultSet(resultSet);
+    }
+
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String goToHomePage() {
