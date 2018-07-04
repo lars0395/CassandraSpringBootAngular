@@ -1,7 +1,9 @@
 package de.lars0395.github.controller;
 
+import com.datastax.driver.core.ColumnDefinitions;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
+import de.lars0395.github.model.CassandraBlobAsStringEntry;
 import de.lars0395.github.model.CassandraEntry;
 import de.lars0395.github.service.CassandraService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,13 @@ public class CassandraController {
     private CassandraService cassandraService;
 
     @RequestMapping(value = "/getData/{correlationID}", method = RequestMethod.GET)
-    public List<CassandraEntry> getCassandraDataForCorrelationId(@PathVariable String correlationID) {
+    public List<CassandraBlobAsStringEntry> getCassandraDataForCorrelationId(@PathVariable String correlationID) {
         ResultSet resultSet = cassandraService.getCassandraDataForCorrelationId(correlationID,null);
         return createListFromResultSet(resultSet);
     }
 
     @RequestMapping(value = "/getData", method = RequestMethod.GET)
-    public List<CassandraEntry> getDataForIdAndIp(@RequestParam("correlationID") String correlationID, @RequestParam("ip") String ip) {
+    public List<CassandraBlobAsStringEntry> getDataForIdAndIp(@RequestParam("correlationID") String correlationID, @RequestParam("ip") String ip) {
         ResultSet resultSet = cassandraService.getCassandraDataForCorrelationId(correlationID,ip);
         return createListFromResultSet(resultSet);
     }
@@ -36,7 +38,61 @@ public class CassandraController {
     @RequestMapping(value = "/getData", method = RequestMethod.POST)
     public List<CassandraEntry> executeNativeQuery(@RequestParam("ip") String ip, @RequestBody String nativeQuery) {
         ResultSet resultSet = cassandraService.executeNativeQuery(ip, nativeQuery.substring(1, nativeQuery.length()-1));
-        return createListFromResultSet(resultSet);
+        List<CassandraEntry> cassandraEntries = new ArrayList<CassandraEntry>();
+        for(Row row : resultSet.all()) {
+            CassandraEntry temp = new CassandraEntry();
+            for (ColumnDefinitions.Definition definition : resultSet.getColumnDefinitions().asList()) {
+                switch (definition.getName()) {
+                    case "key" : {
+                        temp.setKey(row.getString(definition.getName()));
+                        break;
+                    }
+                    case "timestamp" : {
+                        temp.setTimestamp(row.getTimestamp(definition.getName()));
+                        break;
+                    }
+                    case "characteristics": {
+                        temp.setCharacteristics(row.getList(definition.getName(), String.class));
+                        break;
+                    }
+                    case "local_ip": {
+                        temp.setLocalIp(row.getString(definition.getName()));
+                        break;
+                    }
+                    case "local_port": {
+                        temp.setLocalPort(row.getInt(definition.getName()));
+                        break;
+                    }
+                    case "metaData": {
+                        temp.setMetadata(row.getBytes(definition.getName()));
+                        break;
+                    }
+                    case "payload": {
+                        temp.setPayload(row.getBytes(definition.getName()));
+                        break;
+                    }
+                    case "remote_ip": {
+                        temp.setRemoteIp(row.getString(definition.getName()));
+                        break;
+                    }
+                    case "remote_port": {
+                        temp.setRemotePort(row.getInt(definition.getName()));
+                        break;
+                    }
+                    case "remote_path": {
+                        temp.setRemotePath(row.getString(definition.getName()));
+                        break;
+                    }
+                    case "remote_user": {
+                        temp.setRemoteUser(row.getString(definition.getName()));
+                        break;
+                    }
+                    default:
+                }
+            }
+            cassandraEntries.add(temp);
+        }
+        return cassandraEntries;
     }
 
 
@@ -46,10 +102,10 @@ public class CassandraController {
         return "index";
     }
 
-    private List<CassandraEntry> createListFromResultSet(ResultSet resultSet) {
-        List<CassandraEntry> entries = new ArrayList<CassandraEntry>();
+    private List<CassandraBlobAsStringEntry> createListFromResultSet(ResultSet resultSet) {
+        List<CassandraBlobAsStringEntry> entries = new ArrayList<CassandraBlobAsStringEntry>();
         for(Row r : resultSet.all()) {
-            CassandraEntry entry = new CassandraEntry();
+            CassandraBlobAsStringEntry entry = new CassandraBlobAsStringEntry();
             entry.setKey(r.getString("key"));
             entry.setTimestamp(r.getTimestamp("timestamp"));
             entry.setMetadata(r.getString("system.blobastext(metadata)"));

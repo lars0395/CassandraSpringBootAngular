@@ -18,7 +18,7 @@
         </tr>
         <tr ng-repeat="entry in entries">
             <td>{{ entry.key }}</td>
-            <td>{{ entry.timestamp | date:'dd-MM-yyyy HH:mm:ss,sss'}}</td>
+            <td>Date: {{ entry.timestamp | date:'dd-MM-yyyy HH:mm:ss,sss'}}</td>
             <td><textarea style="border:none; width:300px; height:150px;" title="metaData">{{ entry.metadata }}</textarea></td>
             <td><textarea style="border:none; width:1000px; height:500px" title="payload">{{ entry.payload }}</textarea></td>
         </tr>

@@ -1,2 +1,2 @@
 Create keyspace heidi3 with replication = {'class':'SimpleStrategy', 'replication_factor':0};
-CREATE TABLE heidi3.logspi (correlationid text,key text,timestamp timestamp, characteristics list<text>,local_ip text,local_port int,metadata blob,payload blob,remote_ip text,     remote_path text,     remote_port int,     remote_user text,     PRIMARY KEY (correlationid, key, timestamp) );
+CREATE TABLE heidi3.logspi (correlationid text,key text,timestamp timestamp, characteristics list<text>,local_ip text,local_port int,metadata blob,payload blob,remote_ip text,remote_path text,remote_port int,remote_user text,PRIMARY KEY (correlationid, key, timestamp) );
