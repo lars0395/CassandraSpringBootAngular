@@ -9,8 +9,9 @@ RUN ./apache-cassandra-3.0.16/bin/cassandra &
 RUN curl -O http://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.10/bin/apache-tomcat-9.0.10.tar.gz
 RUN tar -xvzf apache-tomcat-9.0.10.tar.gz && rm apache-tomcat-9.0.10.tar.gz
 ADD target/CassandraSpringBootAngular.war apache-tomcat-9.0.10/webapps/CassandraSpringBootAngular.war
+ADD startTomcat.sh startTomcat.sh
 EXPOSE 8080
-CMD ["./apache-tomcat-9.0.10/bin/catalina.sh run"]
+CMD ["./startTomcat.sh"]
 
 #docker build -t cassandra_spring_boot:1.0.0 .
 #docker run -d -p 8080:8080 cassandra_spring_boot:1.0.0

@@ -23,19 +23,19 @@ public class CassandraController {
     @Autowired
     private CassandraService cassandraService;
 
-    @RequestMapping(value = "/getData/{correlationID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/CassandraSpringBootAngular/getData/{correlationID}", method = RequestMethod.GET)
     public List<CassandraBlobAsStringEntry> getCassandraDataForCorrelationId(@PathVariable String correlationID) {
         ResultSet resultSet = cassandraService.getCassandraDataForCorrelationId(correlationID,null);
         return createListFromResultSet(resultSet);
     }
 
-    @RequestMapping(value = "/getData", method = RequestMethod.GET)
+    @RequestMapping(value = "/CassandraSpringBootAngular/getData", method = RequestMethod.GET)
     public List<CassandraBlobAsStringEntry> getDataForIdAndIp(@RequestParam("correlationID") String correlationID, @RequestParam("ip") String ip) {
         ResultSet resultSet = cassandraService.getCassandraDataForCorrelationId(correlationID,ip);
         return createListFromResultSet(resultSet);
     }
 
-    @RequestMapping(value = "/getData", method = RequestMethod.POST)
+    @RequestMapping(value = "/CassandraSpringBootAngular/getData", method = RequestMethod.POST)
     public List<CassandraEntry> executeNativeQuery(@RequestParam("ip") String ip, @RequestBody String nativeQuery) {
         ResultSet resultSet = cassandraService.executeNativeQuery(ip, nativeQuery.substring(1, nativeQuery.length()-1));
         List<CassandraEntry> cassandraEntries = new ArrayList<CassandraEntry>();
@@ -97,7 +97,7 @@ public class CassandraController {
 
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/CassandraSpringBootAngular/", method = RequestMethod.GET)
     public String goToHomePage() {
         return "index";
     }
