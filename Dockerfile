@@ -14,3 +14,4 @@ CMD ["./apache-tomcat-9.0.10/bin/catalina.sh run"]
 
 #docker build -t cassandra_spring_boot:1.0.0 .
 #docker run -d -p 8080:8080 cassandra_spring_boot:1.0.0
+#localhost:8080/CassandraSpringBootAngular/index.html
